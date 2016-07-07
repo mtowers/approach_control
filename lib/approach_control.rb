@@ -57,4 +57,15 @@ module ApproachControl
 end
 
 reddit = ApproachControl.auth!
-ApproachControl.stream_all! reddit
+
+begin
+  ApproachControl.stream_all! reddit
+rescue Redd::Error::RateLimited => error
+  sleep(error.time)
+  retry
+rescue Redd::Error => error
+  # 5-something errors are usually errors on reddit's end.
+  raise error unless (500...600).include?(error.code)
+  retry
+end
+
