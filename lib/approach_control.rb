@@ -42,7 +42,7 @@ module ApproachControl
         end
 
         unless commentators.include? 'approach_control'
-          comment  = "* Airport:  [#{icao}](http://ourairports.com/airports/#{icao}/pilot-info.html#general)"
+          comment  = "* Airport:  [#{icao}](http://www.airportnavfinder.com/airport/#{icao})"
           comment += "\n* Runway:   #{rwy}" if rwy
 
           item.add_comment comment
