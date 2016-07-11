@@ -70,8 +70,9 @@ rescue Redd::Error => error
   # 5-something errors are usually errors on reddit's end.
   raise error unless (500...600).include?(error.code)
   retry
-rescue Net::OpenTimeout => ot
-  puts ot.message
+rescue => e
+  puts e.message
+  puts e.backtrace.split("\n")
   sleep(60)
   ApproachControl.auth!
   retry
