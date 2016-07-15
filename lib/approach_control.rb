@@ -72,7 +72,7 @@ rescue Redd::Error => error
   retry
 rescue => e
   puts e.message
-  puts e.backtrace.split("\n")
+  puts e.backtrace.join("\n")
   sleep(60)
   ApproachControl.auth!
   retry
