@@ -19,7 +19,7 @@ module ApproachControl
   end
 
   def self.stream_all!
-    @reddit.subreddit('shortfinal').post_stream(limit: 1) do |item|
+    @reddit.subreddit('shortfinal').post_stream(limit: 10) do |item|
       puts item.title
       title_match = item.title.match(TITLE_SLUG_REGEX)
       icao_match  = item.title.match(ICAO_REGEX)
