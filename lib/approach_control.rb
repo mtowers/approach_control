@@ -1,5 +1,6 @@
 require "approach_control/version"
 require "redd"
+require "redd/error"
 
 module ApproachControl
   TITLE_SLUG_REGEX  = /^([A-Z0-9]{3,4}|\([A-Z0-9]{3,4}\))+(?:[,\s-])+(?:RWY|Runway|\s)*(\d{1,2}[RLC]{0,1})*/
@@ -8,20 +9,17 @@ module ApproachControl
 
   def self.auth!
     @reddit = Redd.it(
-      :script,
-      ENV['CLIENT_ID'],
-      ENV['CLIENT_SECRET'],
-      ENV['REDDIT_USER'],
-      ENV['REDDIT_PASSWORD'],
-      user_agent: "Approach Control Bot v0.0.1")
-
-    @reddit.authorize!
+      client_id:  ENV['CLIENT_ID'],
+      secret:     ENV['CLIENT_SECRET'],
+      username:   ENV['REDDIT_USER'],
+      password:   ENV['REDDIT_PASSWORD'],
+      user_agent: "Approach Control Bot v0.0.2")
+      
+    # @reddit.authorize!
   end
 
   def self.stream_all!
-    @reddit.stream :get_new, 'shortfinal' do |item|
-      @reddit.refresh_access! if @reddit.access.expired?
-
+    @reddit.subreddit('shortfinal').post_stream(limit: 1) do |item|
       puts item.title
       title_match = item.title.match(TITLE_SLUG_REGEX)
       icao_match  = item.title.match(ICAO_REGEX)
@@ -38,14 +36,14 @@ module ApproachControl
 
       if icao
         commentators = item.comments.map do |comment|
-           comment[:author]
+           comment.author
         end
 
         unless commentators.include? 'approach_control'
           comment  = "* Airport:  [#{icao}](http://www.airportnavfinder.com/airport/#{icao})"
           comment += "\n* Runway:   #{rwy}" if rwy
 
-          item.add_comment comment
+          item.reply comment
         end
       end
     end
@@ -56,21 +54,16 @@ end
 begin
   ApproachControl.auth!
   ApproachControl.stream_all!
-rescue Redd::Error::RateLimited => error
+rescue Redd::TooManyRequests => error
   sleep(error.time)
   retry
-rescue Redd::Error::InvalidOAuth2Credentials
+rescue Redd::AuthenticationError
   puts "Expired OAuth Token.  Reauthorizing after a little nap..."
   sleep(60)
   ApproachControl.auth!
   retry
-rescue Redd::Error => error
-  puts error.message
-  puts error.backtrace.join("\n")
-  # 5-something errors are usually errors on reddit's end.
-  raise error unless (500...600).include?(error.code)
-  retry
 rescue => e
+  puts "Unknown error occurred."
   puts e.message
   puts e.backtrace.join("\n")
   sleep(60)
