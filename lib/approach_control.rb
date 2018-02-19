@@ -36,7 +36,7 @@ module ApproachControl
 
       if icao
         commentators = item.comments.map do |comment|
-           comment.author
+           comment.author.name
         end
 
         unless commentators.include? 'approach_control'
