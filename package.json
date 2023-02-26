@@ -1,0 +1,19 @@
+{
+  "name": "approach-control",
+  "version": "2.0.0",
+  "description": "A Reddit bot for /r/shortfinal that will add a sticky comment to each post with airport details",
+  "main": "dist/approach-control.js",
+  "repository": "https://github.com/mtowers/approach_control",
+  "author": "Matt Towers",
+  "license": "MIT",
+  "private": false,  
+  "devDependencies": {
+    "@types/node": "^18.14.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "axios": "^1.3.3",
+    "snoostorm": "^1.5.2",
+    "snoowrap": "^1.23.0"
+  }
+}

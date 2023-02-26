@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [    
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Application (interactive)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "env": {
+                "REDDIT_USERNAME": "${input:REDDIT_USERNAME}",
+                "REDDIT_PASSWORD": "${input:REDDIT_PASSWORD}",
+                "CLIENT_ID": "${input:CLIENT_ID}",
+                "CLIENT_SECRET": "${input:CLIENT_SECRET}"
+            },
+            "program": "${workspaceFolder}/dist/approach-control.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Application (env)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/dist/approach-control.js"
+        },        
+    ],
+    "inputs": [
+        {
+            "id": "REDDIT_USERNAME",
+            "type": "promptString",
+            "description": "Reddit username",
+            "default": "approach_control"
+        },
+        {
+            "id": "REDDIT_PASSWORD",
+            "type": "promptString",
+            "description": "Reddit passoword"
+        },
+        {
+            "id": "CLIENT_ID",
+            "type": "promptString",
+            "description": "client id"
+        },
+        {
+            "id": "CLIENT_SECRET",
+            "type": "promptString",
+            "description": "client secret"
+        }
+    ]
+}
