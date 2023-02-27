@@ -124,7 +124,7 @@ async function processNewSubmission(item: Snoowrap.Submission) {
 
     recognized
         ? undefined
-        : console.log(`Not found: ${item.title}`)
+        : console.log(`Negative ATIS: ${item.title}`)
 
     const body = getCommentBody(icao, rwy, url, recognized)
 
